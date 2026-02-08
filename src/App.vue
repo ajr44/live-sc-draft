@@ -6,6 +6,8 @@ const leagueId = ref('');
 const userTeamId = ref('');
 const auth = ref('');
 
+let errorcount = 0;
+
 // Cookie management functions
 function setCookie(name, value, days = 7) {
   const date = new Date();
@@ -179,16 +181,24 @@ async function fetchLiveDraft() {
     initialData();
   }
   await genericFetch(buildUrl(), liveDraftData);
-  console.log('Fetched live draft data:', liveDraftData.value);
   
   await genericFetch(`https://www.supercoach.com.au/${year.value}/api/nrl/draft/v1/leagues/${leagueId.value}/recap`, liveDraftRecap);
 
-  liveDraftRecap.value = liveDraftRecap.value.reverse(); // Show most recent picks first
+  if (Array.isArray(liveDraftRecap.value)) {
+    liveDraftRecap.value = liveDraftRecap.value.reverse(); // Show most recent picks first
+  }
   
   if (liveDraftData.value && !liveDraftData.value.error) {
     fetchStatus.value = 'ok';
+    errorcount = 0;
   } else {
+    errorcount++;
     fetchStatus.value = 'error';
+    if (errorcount >= 3) {
+      toggleFetching();
+      console.error('Multiple errors fetching data. Please check your auth token and league/user IDs.');
+      fetchStatus.value = 'stopped';
+    }
   }
 }
 
@@ -214,6 +224,7 @@ async function genericFetch(url, dataRef) {
 function startInterval() {
   if (intervalId) clearInterval(intervalId);
   if (isFetching.value) {
+    errorcount = 0;
     fetchLiveDraft();
     intervalId = setInterval(fetchLiveDraft, fetchInterval.value * 1000);
   }
@@ -400,6 +411,9 @@ loadFromCookies();
     }
     &.paused {
       background: orange;
+    }
+    &.stopped {
+      background: orangered;
     }
   }
 }
