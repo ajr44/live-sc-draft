@@ -29,11 +29,12 @@ const player = computed(() => {
 <style scoped>
 .player {
   margin: 0 auto 3px;
-  background: #f9f9f9;
+  background: #ffffffd3;
   height: 42px;
   width: 120px;
   border-radius: 8px;
   overflow: clip;
+  box-shadow: 0 2px 5px #00000055;
 
   &.empty {
     background: #ddd;
