@@ -28,7 +28,7 @@ const player = computed(() => {
 
 <style scoped>
 .player {
-  margin: 0 auto 5px;
+  margin: 0 auto 3px;
   background: #f9f9f9;
   height: 42px;
   width: 120px;
