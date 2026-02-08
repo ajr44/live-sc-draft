@@ -97,6 +97,7 @@ const teamshape = [
     ['CTW',1],
     ['CTW',2],
     ['CTW',3],
+    ['CTW',4],
     ['FLB',1]
   ]
 ]
